@@ -1,80 +1,97 @@
-/* 基本樣式設置 */
+/* news.css */
+/* 主容器 */
 .container {
-    margin-top: 20px;
+    padding: 2rem; /* 設置內邊距 */
 }
 
-.weight-index {
-    margin-bottom: 20px;
+/* 各個區塊的底部間距 */
+.weight-index, .limit-up-down, .daily-announcements {
+    margin-bottom: 2rem; /* 每個區塊之間的間距 */
 }
 
+/* 加權指數區塊的樣式 */
 .index-container {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border: 1px solid #dee2e6; /* 外邊框 */
+    padding: 1rem; /* 內邊距 */
+    border-radius: .25rem; /* 圓角邊緣 */
 }
 
-.limit-up-down .row {
-    margin: 0;
+/* 漲停與跌停區塊的上邊距 */
+.limit-container {
+    margin-top: 1rem; /* 上邊距 */
 }
 
-.limit-container .card {
-    margin-bottom: 10px;
-}
-
+/* 漲停區塊的樣式 */
 .limit-up, .limit-down {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border: 1px solid #dee2e6; /* 外邊框 */
+    border-radius: .25rem; /* 圓角邊緣 */
+    padding: 1rem; /* 內邊距 */
+    margin-bottom: 1rem; /* 底部間距 */
 }
 
-.daily-announcements {
-    margin-top: 20px;
+/* 漲停和跌停標題的底部間距 */
+.limit-up h2, .limit-down h2 {
+    margin-bottom: 1rem; /* 底部間距 */
 }
 
+/* 卡片的底部間距 */
+.card {
+    margin-bottom: .5rem; /* 底部間距 */
+}
+
+/* 新聞區塊的樣式 */
 .news-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    border: 1px solid #dee2e6; /* 外邊框 */
+    border-radius: .25rem; /* 圓角邊緣 */
 }
 
-.news-container {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+/* 新聞標題區塊的樣式 */
+.news-header {
+    display: flex; /* 使用彈性布局 */
+    justify-content: space-between; /* 在水平方向上分散對齊 */
+    align-items: center; /* 垂直方向上居中對齊 */
+    border-bottom: 1px solid #dee2e6; /* 底部邊框 */
+    padding: .5rem 1rem; /* 內邊距 */
 }
 
+/* 新聞標題的樣式 */
+.news-header h2 {
+    margin: 0; /* 移除默認邊距 */
+}
+
+/* 新聞標題右側的連結樣式 */
+.news-header .nav-link {
+    font-size: .875rem; /* 字體大小 */
+}
+
+/* 新聞區塊的底部間距 */
 .news-section {
-    margin-bottom: 20px;
+    margin-bottom: 1rem; /* 底部間距 */
 }
 
-.news-section h2 {
-    margin-bottom: 10px;
-}
-
-.news-section .nav-link {
-    display: inline-block;
-    margin-bottom: 10px;
-    color: #007bff;
-}
-
+/* 卡片內容的內邊距 */
 .card-body {
-    padding: 10px;
+    padding: .5rem; /* 內邊距 */
 }
 
-.card-title {
-    font-size: 14px;
-    margin-bottom: 5px;
+/* 公告端點容器 */
+.announcements-container {
+    display: flex; /* 使用彈性布局 */
+    flex-wrap: wrap; /* 適應容器的寬度，自動換行 */
+    gap: 1rem; /* 子項目之間的間距 */
 }
 
-@media (max-width: 768px) {
-    .news-wrapper {
-        flex-direction: column;
-    }
+/* 每個公告端點 */
+.announcement-item {
+    flex: 1 1 calc(25% - 1rem); /* 每個公告端點佔容器的 25%，並留有間距 */
+    border: 1px solid #dee2e6; /* 外邊框 */
+    border-radius: .25rem; /* 圓角邊緣 */
+    padding: 1rem; /* 內邊距 */
+    box-sizing: border-box; /* 包括邊框和內邊距在內的尺寸計算 */
+}
 
-    .news-container {
-        margin-bottom: 20px;
-    }
+/* 公告標題 */
+.announcement-item h3 {
+    margin-top: 0; /* 移除頂部邊距 */
+    margin-bottom: .5rem; /* 底部間距 */
 }

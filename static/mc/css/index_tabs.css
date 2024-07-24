@@ -1,38 +1,52 @@
 /* index_tabs.css */
-
-/* 部份新聞內容選項卡 */
+/* 選項卡連結樣式 */
 .tablink {
-    background-color: #f2f2f2;
-    cursor: pointer;
-    padding: 10px 20px;
-    border: none;
-    outline: none;
-    transition: 0.3s;
-    text-decoration: none;
-    color: black;
-    display: inline-block;
-    margin-right: 10px;
+    background-color: #f2f2f2; /* 背景顏色 */
+    cursor: pointer; /* 鼠標懸停樣式 */
+    padding: 10px 20px; /* 內邊距 */
+    border: none; /* 去除邊框 */
+    outline: none; /* 去除輪廓 */
+    transition: 0.3s; /* 變化時間 */
+    text-decoration: none; /* 去除下劃線 */
+    color: black; /* 字體顏色 */
+    display: inline-block; /* 內聯塊顯示 */
+    margin-right: 10px; /* 右側間距 */
 }
 
+/* 鼠標懸停時選項卡的背景顏色變化 */
 .tablink:hover {
-    background-color: #ddd;
+    background-color: #ddd; /* 背景顏色 */
 }
 
+/* 隱藏所有選項卡內容區域 */
 .tabcontent {
-    display: none;
-    padding: 20px 0;
+    display: none; /* 隱藏 */
+    padding: 20px 0; /* 上下內邊距 */
 }
 
+/* 顯示當前活動的選項卡內容區域 */
 .tabcontent.active {
-    display: block;
+    display: block; /* 顯示 */
 }
 
+/* 當前活動選項卡的背景顏色 */
 .tablink.active {
-    background-color: #ccc;
+    background-color: #ccc; /* 背景顏色 */
 }
 
+/* 選項卡容器的樣式 */
 .tabs {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+    display: flex; /* 使用彈性布局 */
+    justify-content: space-around; /* 水平對齊 */
+    margin-bottom: 20px; /* 底部間距 */
+}
+
+/* 選項卡內容的上邊距 */
+.tab-content {
+    margin-top: 1rem; /* 上邊距 */
+}
+
+/* 選項卡內容中的卡片樣式 */
+.tab-content .card {
+    margin-bottom: .5rem; /* 底部間距 */
 }
