@@ -1,0 +1,50 @@
+/* news_tabs.css */
+/* 新聞內容選項卡 */
+
+
+.news-tablink {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    transition: 0.3s;
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.news-container {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 3px;
+    max-width: 3000px;
+    margin: 0 auto;
+}
+
+
+.news-tablink:hover {
+    background-color: #ddd;
+}
+
+.news-tabcontent {
+    display: none;
+    padding: 20px 0;
+}
+
+.news-tabcontent.active {
+    display: block;
+}
+
+.news-tablink.active {
+    background-color: #ccc;
+}
+
+.news-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+

@@ -1,0 +1,42 @@
+/* 登入 */
+
+body, html {
+    height: 100%;
+    margin: 0;
+    background-image: url('../image/login_banner_05.jpeg'); /* 調整路徑以適應你的專案結構 */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    width: 100%;
+    text-align: center; /* 將文字置中 */
+}
+
+.form-floating {
+    text-align: left; /* 調整表單元素的文字對齊方式 */
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+

@@ -1,0 +1,38 @@
+/* index_tabs.css */
+
+/* 部份新聞內容選項卡 */
+.tablink {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    transition: 0.3s;
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.tablink:hover {
+    background-color: #ddd;
+}
+
+.tabcontent {
+    display: none;
+    padding: 20px 0;
+}
+
+.tabcontent.active {
+    display: block;
+}
+
+.tablink.active {
+    background-color: #ccc;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}

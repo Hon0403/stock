@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股東會議 - 新聞列表</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/news_tabs.css') }}">
+    <script src="{{ url_for('static', filename='mc/js/news.js') }}"></script>
+    <style>
+        /* Optional: Adjust card height */
+        .card {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Responsive sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
+                <div class="position-sticky">
+                    <h5 class="mb-2 text-white">股票系統</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <form class="d-flex mb-2">
+                                <input class="form-control me-2" type="search" placeholder="輸入關鍵字" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">搜尋</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="{{ url_for('mc.index') }}">
+                                <i class="el-icon-menu"></i> 返回首頁
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showTab('daily_important'); return false;">
+                                <i class="el-icon-menu"></i> 台股
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="#" onclick="showTab('shareholders_meeting'); return false;">
+                                <i class="el-icon-document"></i> 美股
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">股東會議 - 新聞列表</h1>
+                    <!-- Sidebar toggle button for smaller screens -->
+                    <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="news-container">
+                    <div id="shareholders_meeting" class="tabcontent active">
+                        <div class="row">
+                            {% if error %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data and 'shareholders_meeting' in news_data %}
+                            {% for news in news_data['shareholders_meeting'] %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">出表日期：{{ news.出表日期 }}</h5>
+                                        <p class="card-text">股東常(臨時)會日期-常或臨時：{{ news.股東常(臨時)會日期-常或臨時 }}</p>
+                                        <p class="card-text">股東常(臨時)會日期-日期：{{ news.股東常(臨時)會日期-日期 }}</p>
+                                        <p class="card-text">停止過戶起訖日期-起：{{ news.停止過戶起訖日期-起 }}</p>
+                                        <p class="card-text">停止過戶起訖日期-訖：{{ news.停止過戶起訖日期-訖 }}</p>
+                                        <p class="card-text">預擬配發現金(股利)(元/股)-盈餘：{{ news.預擬配發現金(股利)(元/股)-盈餘 }}</p>
+                                        <p class="card-text">預擬配發現金(股利)(元/股)-法定盈餘公積、資本公積：{{ news.預擬配發現金(股利)(元/股)-法定盈餘公積、資本公積 }}</p>
+                                        <p class="card-text">預擬配股(元/股)-盈餘：{{ news.預擬配股(元/股)-盈餘 }}</p>
+                                        <p class="card-text">預擬配股(元/股)-法定盈餘公積、資本公積：{{ news.預擬配股(元/股)-法定盈餘公積、資本公積 }}</p>
+                                        <p class="card-text">擬現金增資金額(元)：{{ news.擬現金增資金額(元) }}</p>
+                                        <p class="card-text">現金增資認購率(%)：{{ news.現金增資認購率(%) }}</p>
+                                        <p class="card-text">員工紅利-現金紅利(元)：{{ news.員工紅利-現金紅利(元) }}</p>
+                                        <p class="card-text">員工紅利-股票紅利(股)：{{ news.員工紅利-股票紅利(股) }}</p>
+                                        <p class="card-text">特別股股利(元/股)：{{ news.特別股股利(元/股) }}</p>
+                                        <p class="card-text">董監酬勞(元)：{{ news.董監酬勞(元) }}</p>
+                                        <p class="card-text">公告日期：{{ news.公告日期 }}</p>
+                                        <p class="card-text">公告時間：{{ news.公告時間 }}</p>
+                                        <p class="card-text">種類：{{ news.種類 }}</p>
+                                        <a href="#" onclick="toggleFullNews('{{ loop.index0 }}')" class="card-link">閱讀更多</a>
+                                        <div id="full_news_{{ loop.index0 }}" style="display: none;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">沒有股東會議資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <!-- 分頁 -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination d-flex justify-content-center">
+                                {% for num in range(1, total_pages + 1) %}
+                                <li class="page-item {% if num == current_page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('mc.news', endpoint='shareholders_meeting', page=num) }}">{{ num }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                        <!-- /分頁 -->
+                    </div>
+                    <!-- 其他新聞類別的顯示 -->
+                </div>
+                <div class="chart-container mt-4">
+                    <div id="kline_chart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>

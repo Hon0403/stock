@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}股票系統{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/index_tabs.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
+                <div class="position-sticky">
+                    <h5 class="mb-2 text-white">股票系統</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <form class="d-flex mb-2">
+                                <input class="form-control me-2" type="search" placeholder="輸入關鍵字" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">搜尋</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link ">
+                                <i class="el-icon-menu"></i> 功能
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{% block header %}首頁{% endblock %}</h1>
+                    <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                {% block content %}{% endblock %}
+                <div class="chart-container mt-4">
+                    <div id="kline_chart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='mc/js/sidebar.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,263 @@
+{% extends 'mc/base.html' %}
+
+{% block title %}首頁{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='mc/css/news.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mc/css/index_tabs.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- 加權指數區塊 -->
+    <div class="weight-index">
+        <h1>加權指數</h1>
+        <div class="index-container">
+            <p>這裡將顯示加權指數的相關資訊或圖表。</p>
+        </div>
+    </div>
+
+    <!-- 漲停與跌停區塊 -->
+    <div class="limit-up-down">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="limit-up">
+                    <h2>漲停股票</h2>
+                    <div class="limit-container">
+                        <div class="row">
+                            {% if error and not limit_up_data %}
+                            <div class="col-12">
+                                <div class="card-body">
+                                    <p class="card-text">{{ error }}</p>
+                                </div>
+                            </div>
+                            {% elif limit_up_data %}
+                            {% for stock in limit_up_data %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">股票代碼：{{ stock['code'] }}</h5>
+                                        <p class="card-text">股票名稱：{{ stock['name'] }}</p>
+                                        <p class="card-text">漲停價：{{ stock['limit_up_price'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有漲停股票資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="limit-down">
+                    <h2>跌停股票</h2>
+                    <div class="limit-container">
+                        <div class="row">
+                            {% if error and not limit_down_data %}
+                            <div class="col-12">
+                                <div class="card-body">
+                                    <p class="card-text">{{ error }}</p>
+                                </div>
+                            </div>
+                            {% elif limit_down_data %}
+                            {% for stock in limit_down_data %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">股票代碼：{{ stock['code'] }}</h5>
+                                        <p class="card-text">股票名稱：{{ stock['name'] }}</p>
+                                        <p class="card-text">跌停價：{{ stock['limit_down_price'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有跌停股票資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日公告區塊 -->
+    <div class="daily-announcements">
+        <div class="news-wrapper row">
+            <div class="col-md-3">
+                <div class="news-container">
+                    <section class="news-section">
+                        <h2>每日重大訊息</h2>
+                        <a class="nav-link" href="{{ daily_important_more_url }}">更多公告</a>
+                        <div class="row">
+                            {% if error and not news_data['daily_important'] %}
+                            <div class="col-12">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data['daily_important'] %}
+                            {% for news in news_data['daily_important'] %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">主旨：{{ news['主旨 '][:30] }}{% if news['主旨 ']|length > 30 %}...{% endif %}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有每日重要新聞資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="news-container">
+                    <section class="news-section">
+                        <h2>股東會公告</h2>
+                        <a class="nav-link" href="{{ shareholders_meeting_more_url }}">更多公告</a>
+                        <div class="row">
+                            {% if error and not news_data['shareholders_meeting'] %}
+                            <div class="col-12">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data['shareholders_meeting'] %}
+                            {% for news in news_data['shareholders_meeting'] %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">公告日期：{{ news['公告日期'][:30] }}{% if news['公告日期']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">公司名稱：{{ news['公司名稱'][:30] }}{% if news['公司名稱']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">股東常(臨時)會日期-常或臨時：{{ news['股東常(臨時)會日期-常或臨時'][:30] }}{% if news['股東常(臨時)會日期-常或臨時']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">股東常(臨時)會日期-日期：{{ news['股東常(臨時)會日期-日期'][:30] }}{% if news['股東常(臨時)會日期-日期']|length > 30 %}...{% endif %}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有股東會公告資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="news-container">
+                    <section class="news-section">
+                        <h2>臨時公告</h2>
+                        <a class="nav-link" href="{{ temporary_more_url }}">更多公告</a>
+                        <div class="row">
+                            {% if error and not news_data['temporary'] %}
+                            <div class="col-12">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data['temporary'] %}
+                            {% for news in news_data['temporary'] %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">公告日期：{{ news['公告日期'][:30] }}{% if news['公告日期']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">公司名稱：{{ news['公司名稱'][:30] }}{% if news['公司名稱']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">臨時公告主旨：{{ news['臨時公告主旨'][:30] }}{% if news['臨時公告主旨']|length > 30 %}...{% endif %}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有臨時公告資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="news-container">
+                    <section class="news-section">
+                        <h2>董事會公告</h2>
+                        <a class="nav-link" href="{{ board_meeting_more_url }}">更多公告</a>
+                        <div class="row">
+                            {% if error and not news_data['board_meeting'] %}
+                            <div class="col-12">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data['board_meeting'] %}
+                            {% for news in news_data['board_meeting'] %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">公告日期：{{ news['公告日期'][:30] }}{% if news['公告日期']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">公司名稱：{{ news['公司名稱'][:30] }}{% if news['公司名稱']|length > 30 %}...{% endif %}</h5>
+                                        <h5 class="card-title">董事會公告主旨：{{ news['董事會公告主旨'][:30] }}{% if news['董事會公告主旨']|length > 30 %}...{% endif %}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">目前沒有董事會公告資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

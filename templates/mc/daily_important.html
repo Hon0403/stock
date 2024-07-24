@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首頁</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/news_tabs.css') }}">
+    <script src="{{ url_for('static', filename='mc/js/news.js') }}"></script>
+    <style>
+        /* Optional: Adjust card height */
+        .card {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Responsive sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
+                <div class="position-sticky">
+                    <h5 class="mb-2 text-white">股票系統</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <form class="d-flex mb-2">
+                                <input class="form-control me-2" type="search" placeholder="輸入關鍵字" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">搜尋</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="{{ url_for('mc.index') }}">
+                                <i class="el-icon-menu"></i> 返回首頁
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="#" onclick="showTab('daily_important'); return false;">
+                                <i class="el-icon-menu"></i> 台股
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" onclick="showTab('shareholders_meeting'); return false;">
+                                <i class="el-icon-document"></i> 美股
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">新聞列表</h1>
+                    <!-- Sidebar toggle button for smaller screens -->
+                    <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="news-container">
+                    <div id="daily_important" class="tabcontent active">
+                        <div class="row">
+                            {% if error %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">{{ error }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif news_data and 'daily_important' in news_data %}
+                            {% for news in news_data['daily_important'] %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">公司名稱：{{ news.公司名稱 }}</h5>
+                                        <p class="card-text">公司代號：{{ news.公司代號 }}</p>
+                                        <p class="card-text">{{ news['主旨 '] }}</p>
+                                        <a href="#" onclick="toggleFullNews('{{ loop.index0 }}')" class="card-link">閱讀更多</a>
+                                        <div id="full_news_{{ loop.index0 }}" style="display: none;">
+                                            <p>發言時間：{{ news.發言時間 }}</p>
+                                            <p>出表日期：{{ news.出表日期 }}</p>
+                                            <p>符合條款：{{ news.符合條款 }}</p>
+                                            <p>事實發生日：{{ news.事實發生日 }}</p>
+                                            <p>說明：{{ news.說明 }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">沒有每日重要新聞資料</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <!-- 分頁 -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination d-flex justify-content-center">
+                                {% if total_pages['daily_important'] > 1 %}
+                                {% for num in range(1, total_pages['daily_important'] + 1) %}
+                                <li class="page-item {% if num == current_page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('mc.index', page=num) }}">{{ num }}</a>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        <!-- /分頁 -->
+                    </div>
+                    <!-- 其他新聞類別的顯示 -->
+                </div>
+                <div class="chart-container mt-4">
+                    <div id="kline_chart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
