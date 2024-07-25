@@ -1,83 +1,36 @@
-/* news.css */
-/* 主容器 */
-.container {
-    padding: 2rem; /* 設置內邊距 */
-}
-
-/* 各個區塊的底部間距 */
-.weight-index, .limit-up-down, .daily-announcements {
-    margin-bottom: 2rem; /* 每個區塊之間的間距 */
-}
-
-/* 加權指數區塊的樣式 */
-.index-container {
+/* 設定外框樣式 */
+.card {
     border: 1px solid #dee2e6; /* 外邊框 */
-    padding: 1rem; /* 內邊距 */
     border-radius: .25rem; /* 圓角邊緣 */
 }
 
-/* 漲停與跌停區塊的上邊距 */
-.limit-container {
-    margin-top: 1rem; /* 上邊距 */
+/* 設定加權指數區塊 */
+.weight-index {
+    border: 1px solid #dee2e6; /* 外邊框 */
+    border-radius: .25rem; /* 圓角邊緣 */
+    background-color: #fff; /* 背景顏色 */
+    margin-bottom: 1rem; /* 下邊距 */
 }
 
-/* 漲停區塊的樣式 */
+/* 漲停與跌停區塊 */
+.limit-up-down {
+    margin-bottom: 1rem; /* 下邊距 */
+}
+
 .limit-up, .limit-down {
     border: 1px solid #dee2e6; /* 外邊框 */
     border-radius: .25rem; /* 圓角邊緣 */
-    padding: 1rem; /* 內邊距 */
-    margin-bottom: 1rem; /* 底部間距 */
+    background-color: #fff; /* 背景顏色 */
 }
 
-/* 漲停和跌停標題的底部間距 */
-.limit-up h2, .limit-down h2 {
-    margin-bottom: 1rem; /* 底部間距 */
+/* 每日公告區塊 */
+.daily-announcements {
+    margin-top: 1rem; /* 上邊距 */
 }
 
-/* 卡片的底部間距 */
-.card {
-    margin-bottom: .5rem; /* 底部間距 */
-}
-
-/* 新聞區塊的樣式 */
-.news-wrapper {
-    border: 1px solid #dee2e6; /* 外邊框 */
-    border-radius: .25rem; /* 圓角邊緣 */
-}
-
-/* 新聞標題區塊的樣式 */
-.news-header {
-    display: flex; /* 使用彈性布局 */
-    justify-content: space-between; /* 在水平方向上分散對齊 */
-    align-items: center; /* 垂直方向上居中對齊 */
-    border-bottom: 1px solid #dee2e6; /* 底部邊框 */
-    padding: .5rem 1rem; /* 內邊距 */
-}
-
-/* 新聞標題的樣式 */
-.news-header h2 {
-    margin: 0; /* 移除默認邊距 */
-}
-
-/* 新聞標題右側的連結樣式 */
-.news-header .nav-link {
-    font-size: .875rem; /* 字體大小 */
-}
-
-/* 新聞區塊的底部間距 */
-.news-section {
-    margin-bottom: 1rem; /* 底部間距 */
-}
-
-/* 卡片內容的內邊距 */
-.card-body {
-    padding: .5rem; /* 內邊距 */
-}
-
-/* 公告端點容器 */
 .announcements-container {
     display: flex; /* 使用彈性布局 */
-    flex-wrap: wrap; /* 適應容器的寬度，自動換行 */
+    flex-wrap: wrap; /* 允許換行 */
     gap: 1rem; /* 子項目之間的間距 */
 }
 
@@ -88,10 +41,14 @@
     border-radius: .25rem; /* 圓角邊緣 */
     padding: 1rem; /* 內邊距 */
     box-sizing: border-box; /* 包括邊框和內邊距在內的尺寸計算 */
+    background-color: #fff; /* 背景顏色 */
+    margin-bottom: 1rem; /* 下邊距 */
 }
 
-/* 公告標題 */
-.announcement-item h3 {
-    margin-top: 0; /* 移除頂部邊距 */
-    margin-bottom: .5rem; /* 底部間距 */
+/* 設定公告標題和更多連結 */
+.news-header {
+    display: flex; /* 使用彈性布局 */
+    justify-content: space-between; /* 內容左右對齊 */
+    align-items: center; /* 垂直居中對齊 */
+    margin-bottom: 1rem; /* 下邊距 */
 }

@@ -98,12 +98,12 @@
 
     <!-- 每日公告區塊 -->
     <div class="daily-announcements">
-        <div class="news-wrapper">
-            <div class="news-container">
+        <div class="announcements-container">
+            <div class="announcement-item">
                 <section class="news-section">
                     <div class="news-header">
                         <h2>每日重大訊息</h2>
-                        <a class="nav-link" href="{{ daily_important_more_url }}">更多公告</a>
+                        <a class="nav-link" href="{{ url_for('mc.news', section='daily_important') }}">更多公告</a>
                     </div>
                     <div class="row">
                         {% if error and not news_data['daily_important'] %}
@@ -137,11 +137,11 @@
                 </section>
             </div>
 
-            <div class="news-container">
+            <div class="announcement-item">
                 <section class="news-section">
                     <div class="news-header">
                         <h2>股東會公告</h2>
-                        <a class="nav-link" href="{{ shareholders_meeting_more_url }}">更多公告</a>
+                        <a class="nav-link" href="{{ url_for('mc.news', section='shareholders_meeting') }}">更多公告</a>
                     </div>
                     <div class="row">
                         {% if error and not news_data['shareholders_meeting'] %}
@@ -159,8 +159,6 @@
                                 <div class="card-body">
                                     <h5 class="card-title">公告日期：{{ news['公告日期'][:30] }}{% if news['公告日期']|length > 30 %}...{% endif %}</h5>
                                     <h5 class="card-title">公司名稱：{{ news['公司名稱'][:30] }}{% if news['公司名稱']|length > 30 %}...{% endif %}</h5>
-                                    <h5 class="card-title">股東常(臨時)會日期-常或臨時：{{ news['股東常(臨時)會日期-常或臨時'][:30] }}{% if news['股東常(臨時)會日期-常或臨時']|length > 30 %}...{% endif %}</h5>
-                                    <h5 class="card-title">股東常(臨時)會日期-日期：{{ news['股東常(臨時)會日期-日期'][:30] }}{% if news['股東常(臨時)會日期-日期']|length > 30 %}...{% endif %}</h5>
                                 </div>
                             </div>
                         </div>
@@ -178,14 +176,14 @@
                 </section>
             </div>
 
-            <div class="news-container">
+            <div class="announcement-item">
                 <section class="news-section">
                     <div class="news-header">
                         <h2>臨時公告</h2>
-                        <a class="nav-link" href="{{ temporary_announcement_more_url }}">更多公告</a>
+                        <a class="nav-link" href="{{ url_for('mc.news', section='market_notice') }}">更多公告</a>
                     </div>
                     <div class="row">
-                        {% if error and not news_data['temporary_announcement'] %}
+                        {% if error and not news_data['market_abnormal'] %}
                         <div class="col-12">
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -193,13 +191,14 @@
                                 </div>
                             </div>
                         </div>
-                        {% elif news_data['temporary_announcement'] %}
-                        {% for news in news_data['temporary_announcement'] %}
+                        {% elif news_data['market_abnormal'] %}
+                        {% for news in news_data['market_abnormal'] %}
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">主旨：{{ news['主旨'][:30] }}{% if news['主旨']|length > 30 %}...{% endif %}</h5>
-                                    <h5 class="card-title">公司名稱：{{ news['公司名稱'][:30] }}{% if news['公司名稱']|length > 30 %}...{% endif %}</h5>
+                                    <h5 class="card-title">編號：：{{ news['Number'][:30] }}{% if news['Number']|length > 30 %}...{% endif %}</h5>
+                                    <h5 class="card-title">代碼：{{ news['Code'][:30] }}{% if news['Code']|length > 30 %}...{% endif %}</h5>
+                                    <h5 class="card-title">名稱：{{ news['Name'][:30] }}{% if news['Name']|length > 30 %}...{% endif %}</h5>
                                 </div>
                             </div>
                         </div>
@@ -217,11 +216,11 @@
                 </section>
             </div>
 
-            <div class="news-container">
+            <div class="announcement-item">
                 <section class="news-section">
                     <div class="news-header">
                         <h2>董事會公告</h2>
-                        <a class="nav-link" href="{{ board_announcement_more_url }}">更多公告</a>
+                        <a class="nav-link" href="{{ url_for('mc.news', section='market_abnormal') }}">更多公告</a>
                     </div>
                     <div class="row">
                         {% if error and not news_data['board_announcement'] %}

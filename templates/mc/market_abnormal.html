@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block header %}
-每日重大訊息
+董事會公告
 {% endblock %}
 
 {% block content %}
@@ -35,16 +35,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">公司名稱：{{ news.公司名稱 }}</h5>
-                        <p class="card-text">公司代號：{{ news.公司代號 }}</p>
-                        <p class="card-text">{{ news['主旨 '] }}</p>
+                        <h5 class="card-title">編號：{{ news['Number'] }}</h5>
+                        <p class="card-text">代碼：{{ news['Code'] }}</p>
+                        <p class="card-text">名稱：{{ news['Name'] }}</p>
+                        <p class="card-text">最近符合關注標準：{{ news['RecentlyMetAttentionSecuritiesCriteria'] }}</p>
                         <a href="#" onclick="toggleFullNews('{{ loop.index0 }}')" class="card-link">閱讀更多</a>
                         <div id="full_news_{{ loop.index0 }}" style="display: none;">
-                            <p>發言時間：{{ news.發言時間 }}</p>
-                            <p>出表日期：{{ news.出表日期 }}</p>
-                            <p>符合條款：{{ news.符合條款 }}</p>
-                            <p>事實發生日：{{ news.事實發生日 }}</p>
-                            <p>說明：{{ news.說明 }}</p>
+                            <!-- 可根據需要添加更多詳細信息 -->
                         </div>
                     </div>
                 </div>
@@ -85,32 +82,33 @@
                 <!-- 顯示當前頁碼附近的頁碼 -->
                 {% set start_page = current_page - 2 %}
                 {% set end_page = current_page + 2 %}
-                {% if start_page < 1 %} {% set start_page=1 %} {% endif %} {% if end_page> total_pages %} {% set
-                    end_page = total_pages %} {% endif %}
+                {% if start_page < 1 %} {% set start_page=1 %} {% endif %} {% if end_page > total_pages %} {% set end_page = total_pages %} {% endif %}
 
-                    {% for num in range(start_page, end_page + 1) %}
-                    <li class="page-item {% if num == current_page %}active{% endif %}">
-                        <a class="page-link" href="{{ url_for('mc.news', section=section, page=num) }}">{{ num }}</a>
-                    </li>
-                    {% endfor %}
+                {% for num in range(start_page, end_page + 1) %}
+                <li class="page-item {% if num == current_page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('mc.news', section=section, page=num) }}">{{ num }}</a>
+                </li>
+                {% endfor %}
 
-                    <!-- 顯示後兩頁 -->
-                    {% if current_page < total_pages - 2 %} {% if current_page < total_pages - 3 %} <li
-                        class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                        <li class="page-item"><a class="page-link"
-                                href="{{ url_for('mc.news', section=section, page=total_pages) }}">{{ total_pages }}</a>
-                        </li>
-                        {% endif %}
+                <!-- 顯示後兩頁 -->
+                {% if current_page < total_pages - 2 %}
+                {% if current_page < total_pages - 3 %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link"
+                        href="{{ url_for('mc.news', section=section, page=total_pages) }}">{{ total_pages }}</a>
+                </li>
+                {% endif %}
 
-                        {% if current_page < total_pages %} <li class="page-item">
-                            <a class="page-link" href="{{ url_for('mc.news', section=section, page=current_page + 1) }}"
-                                aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                            </li>
-                            {% endif %}
-                            {% endif %}
+                {% if current_page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('mc.news', section=section, page=current_page + 1) }}"
+                        aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% endif %}
             </ul>
         </nav>
         <!-- /分頁 -->

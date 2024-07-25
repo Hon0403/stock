@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block header %}
-每日重大訊息
+臨時公告
 {% endblock %}
 
 {% block content %}
@@ -35,28 +35,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">公司名稱：{{ news['公司名稱'] }}</h5>
-                        <p class="card-text">公司代號：{{ news['公司代號'] }}</p>
-                        <p class="card-text">公告日期：{{ news['公告日期'] }}</p>
-                        <p class="card-text">公告時間：{{ news['公告時間'] }}</p>
-                        <p class="card-text">種類：{{ news['種類'] }}</p>
+                        <h5 class="card-title">編號：{{ news.Number }}</h5>
+                        <p class="card-text">代碼：{{ news.Code }}</p>
+                        <p class="card-text">名稱：{{ news.Name }}</p>
+                        <p class="card-text">公告數量：{{ news.NumberOfAnnouncement }}</p>
+                        <p class="card-text">交易資訊：{{ news.TradingInfoForAttention }}</p>
+                        <p class="card-text">日期：{{ news.Date }}</p>
+                        <p class="card-text">收盤價：{{ news.ClosingPrice }}</p>
+                        <p class="card-text">本益比：{{ news.PE }}</p>
                         <a href="#" onclick="toggleFullNews('{{ loop.index0 }}')" class="card-link">閱讀更多</a>
                         <div id="full_news_{{ loop.index0 }}" style="display: none;">
-                            <p>出表日期：{{ news['出表日期'] }}</p>
-                            <p>股東常(臨時)會日期-常或臨時：{{ news['股東常(臨時)會日期-常或臨時'] }}</p>
-                            <p>股東常(臨時)會日期-日期：{{ news['股東常(臨時)會日期-日期'] }}</p>
-                            <p>停止過戶起訖日期-起：{{ news['停止過戶起訖日期-起'] }}</p>
-                            <p>停止過戶起訖日期-訖：{{ news['停止過戶起訖日期-訖'] }}</p>
-                            <p>預擬配發現金(股利)(元/股)-盈餘：{{ news['預擬配發現金(股利)(元/股)-盈餘'] }}</p>
-                            <p>預擬配發現金(股利)(元/股)-法定盈餘公積、資本公積：{{ news['預擬配發現金(股利)(元/股)-法定盈餘公積、資本公積'] }}</p>
-                            <p>預擬配股(元/股)-盈餘：{{ news['預擬配股(元/股)-盈餘'] }}</p>
-                            <p>預擬配股(元/股)-法定盈餘公積、資本公積：{{ news['預擬配股(元/股)-法定盈餘公積、資本公積'] }}</p>
-                            <p>擬現金增資金額(元)：{{ news['擬現金增資金額(元)'] }}</p>
-                            <p>現金增資認購率(%)：{{ news['現金增資認購率(%)'] }}</p>
-                            <p>員工紅利-現金紅利(元)：{{ news['員工紅利-現金紅利(元)'] }}</p>
-                            <p>員工紅利-股票紅利(股)：{{ news['員工紅利-股票紅利(股)'] }}</p>
-                            <p>特別股股利(元/股)：{{ news['特別股股利(元/股)'] }}</p>
-                            <p>董監酬勞(元)：{{ news['董監酬勞(元)'] }}</p>
+                            <!-- 可以根據需要添加更多詳細信息 -->
                         </div>
                     </div>
                 </div>
