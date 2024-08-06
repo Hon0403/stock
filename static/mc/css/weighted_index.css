@@ -1,0 +1,26 @@
+/* weighted_index.css */
+
+.index-container {
+    border: 1px solid #ccc; /* 外框顏色 */
+    padding: 20px; /* 內邊距 */
+    margin: 20px; /* 外邊距 */
+    border-radius: 5px; /* 圓角邊框 */
+    background-color: #f9f9f9; /* 背景顏色 */
+    width: 20%; /* 調整寬度，這裡設為 80% */
+    max-width: 1200px; /* 設置最大寬度 */
+}
+
+
+.up {
+    color: red;
+    font-weight: bold;
+}
+
+.down {
+    color: green;
+    font-weight: bold;
+}
+
+.last-price {
+    font-weight: bold;
+}

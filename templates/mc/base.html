@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/index_tabs.css') }}">
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -18,9 +19,9 @@
                     <h5 class="mb-2 text-white">股票系統</h5>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <form class="d-flex mb-2">
-                                <input class="form-control me-2" type="search" placeholder="輸入關鍵字" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">搜尋</button>
+                            <form id="searchForm" action="{{ url_for('mc.search_keywords') }}" method="GET">
+                                <input type="text" name="keyword" placeholder="輸入股票代號">
+                                <button type="submit">搜尋</button>
                             </form>
                         </li>
                         <li class="nav-item">

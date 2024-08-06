@@ -1,0 +1,61 @@
+/* 上下框样式 */
+.stock-info-top, .stock-info-bottom {
+    border: 1px solid #dee2e6; /* 框的边框 */
+    background-color: #f8f9fa; /* 背景色 */
+    padding: 0.5rem; /* 内边距 */
+    border-radius: 0.25rem; /* 圆角边框 */
+}
+
+/* 上下框之间没有间隔 */
+.stock-info-top {
+    margin-bottom: 0; /* 上框底部没有间隔 */
+}
+
+.stock-info-bottom {
+    margin-top: 0; /* 下框顶部没有间隔 */
+}
+
+/* 上框的平行数据样式 */
+.stock-info-top .nav-detail-ohlc {
+    display: flex;
+    justify-content: space-between; /* 项目之间的间距 */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* 下框的平行数据样式 */
+.stock-info-bottom .nav-detail-ohlc {
+    display: flex;
+    justify-content: space-between; /* 项目之间的间距 */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* 单个项目的样式 */
+.nav-item {
+    display: flex;
+    align-items: center;
+    margin: 0; /* 去掉外边距 */
+    flex: 1; /* 平均分配每个项目的宽度 */
+    box-sizing: border-box; /* 包括内边距和边框 */
+    height: auto; /* 自适应高度 */
+    font-family: -apple-system, BlinkMacSystemFont, Arial, Helvetica, "PingFang SC", "PingFang TC", "Microsoft JhengHei", sans-serif; /* 设置字体系列 */
+    font-size: 14px; /* 设置字体大小 */
+    font-weight: 400; /* 设置字体粗细 */
+    line-height: 21px; /* 设置行高 */
+    color: rgb(33, 37, 41); /* 设置字体颜色 */
+    text-align: left; /* 左对齐 */
+}
+
+/* 项目标签的样式 */
+.nav-item i {
+    font-weight: bold;
+    margin-right: 5px; /* 更小的间距 */
+}
+
+/* 项目值的样式 */
+.nav-item span {
+    font-size: 0.75rem; /* 更小的字体大小 */
+}

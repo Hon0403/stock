@@ -1,18 +1,27 @@
 # apps/mc/views.py
 
+# 漲跌停還沒寫完 #
+
+import asyncio
 from math import ceil
+import httpx
 import requests
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required
+from apps.fastapi.stock_data_api.stock_data_api import API_URLS
 from apps.mc.models import Members
 from apps.fastapi.news_api.news_requests import fetch_data  # 確保這是正確的導入
+from .api_requests import fetch_news_data, fetch_limit_up_data, fetch_limit_down_data
+import yfinance as yf
 from . import bp
 
 @bp.route('/')
 @login_required
 def index():
     try:
-        current_app.logger.info("Index page accessed")
+
+        # 處理公告 #
+
         endpoints = {
             'daily_important': "opendata/t187ap04_L",
             'shareholders_meeting': "opendata/t187ap38_L",
@@ -20,14 +29,9 @@ def index():
             'market_abnormal': "announcement/notetrans"
         }
 
-        news_data = {}
-        for key, url in endpoints.items():
-            current_app.logger.info(f"Fetching data from {url}")
-            response = requests.get(f"https://openapi.twse.com.tw/v1/{url}")
-            response.raise_for_status()
-            data = response.json()
-            news_data[key] = data[:3]  # 只保留前三筆資料
-            current_app.logger.info(f"Fetched data for {key}: {news_data[key]}")
+        news_data = fetch_news_data(endpoints)
+        limit_up_data = fetch_limit_up_data()
+        limit_down_data = fetch_limit_down_data()
 
         daily_important_more_url = url_for('mc.index', _external=True, endpoint_name='daily_important')
         shareholders_meeting_more_url = url_for('mc.index', _external=True, endpoint_name='shareholders_meeting')
@@ -41,7 +45,9 @@ def index():
             daily_important_more_url=daily_important_more_url,
             shareholders_meeting_more_url=shareholders_meeting_more_url,
             market_notice_more_url=market_notice_more_url,
-            market_abnormal_more_url=market_abnormal_more_url
+            market_abnormal_more_url=market_abnormal_more_url,
+            price_limits=limit_up_data,
+            limit_down_data=limit_down_data
         )
 
     except Exception as e:
@@ -52,7 +58,6 @@ def index():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    current_app.logger.info("Login page accessed")
     message = None
 
     if request.method == 'POST':
@@ -104,7 +109,6 @@ def news():
     url = endpoints.get(section)
     if url:
         try:
-            current_app.logger.info(f"Fetching data from {url}")
             response = requests.get(f"https://openapi.twse.com.tw/v1/{url}")
             response.raise_for_status()
             all_news_data = response.json()
@@ -145,4 +149,111 @@ def news():
 
 
 
+@bp.route('/price_limits')
+@login_required
+def price_limits():
+
+    Code = request.args.get('Code', 'AAPL')  # 默認股票代碼為 'AAPL'
+    
+    try:
+        response = requests.get(f"http://127.0.0.1:8000/price-limits/api/stocks/{Code}")  # 替換為你的 FastAPI 服務地址
+        response.raise_for_status()
+        price_limits_data = response.json()
+        
+        return render_template('index.html', price_limits=price_limits_data)
+    except requests.HTTPError as e:
+        current_app.logger.error(f"HTTP error fetching price limits: {str(e)}")
+        return render_template('index.html', price_limits=None, error=str(e))
+    except Exception as e:
+        current_app.logger.error(f"Error fetching price limits: {str(e)}")
+        return render_template('index.html', price_limits=None, error=str(e))
+    
+
+
+@bp.route('/search_keywords')
+def search_keywords():
+    keyword = request.args.get('keyword', '')
+
+    if keyword:
+        return redirect(url_for('mc.stock_data', stock_code=keyword))
+    return redirect(url_for('mc.index'))
+
+@bp.route('/stock_data', methods=['GET'])
+@login_required
+def stock_data():
+    from datetime import datetime
+    import pandas as pd
+
+    # 初始化最後修改時間的變數
+    formatted_last_modified = None
+
+    try:
+        # 設定股票代碼
+        stock_code = request.args.get('stock_code', '')
+        if not stock_code:
+            return render_template('mc/stock_data.html', error="請輸入股票代碼", stock_data=None, last_modified=formatted_last_modified)
+
+        # 將股票代碼轉換為 Yahoo Finance 使用的格式
+        ticker = f"{stock_code}.TW"  # 台股代碼後面加上 ".TW"
+
+        # 創建股票對象
+        stock = yf.Ticker(ticker)
+
+        # 獲取即時行情數據
+        stock_info = stock.info
+        stock_history = stock.history(period='1d')
+
+        # 格式化最後修改時間
+        last_modified_datetime = stock_history.index[-1]
+        formatted_last_modified = last_modified_datetime.strftime('%Y-%m-%d %H:%M:%S')
+
+        # 提取需要顯示的數據
+        stock_data = {
+            'code': stock_code,
+            'name': stock_info.get('shortName', 'N/A'),
+            'price': stock_info.get('currentPrice', 'N/A'),
+            'change': stock_info.get('dayChange', 'N/A'),
+            'changePercent': stock_info.get('dayChangePercent', 'N/A'),
+            'volume': int(stock_history['Volume'].iloc[0]) if 'Volume' in stock_history.columns and not pd.isnull(stock_history['Volume'].iloc[0]) else 'N/A',
+            'open': stock_history['Open'].iloc[0] if 'Open' in stock_history.columns and not pd.isnull(stock_history['Open'].iloc[0]) else 'N/A',
+            'close': stock_history['Close'].iloc[0] if 'Close' in stock_history.columns and not pd.isnull(stock_history['Close'].iloc[0]) else 'N/A',
+            'high': stock_history['High'].iloc[0] if 'High' in stock_history.columns and not pd.isnull(stock_history['High'].iloc[0]) else 'N/A',
+            'low': stock_history['Low'].iloc[0] if 'Low' in stock_history.columns and not pd.isnull(stock_history['Low'].iloc[0]) else 'N/A',
+            'sector': stock_info.get('sector', 'N/A'),
+            'industry': stock_info.get('industry', 'N/A'),
+            'country': stock_info.get('country', 'N/A'),
+            'employees': stock_info.get('fullTimeEmployees', 'N/A'),
+            'ceo': stock_info.get('ceo', 'N/A'),  # 可能需要進一步處理以獲得創辦人資料
+        }
+
+
+        # K 線數據
+        k_line_data = stock_history.reset_index().to_dict(orient='records')
+        for record in k_line_data:
+            record['date'] = record['Date'].strftime('%Y-%m-%d')
+
+        print(k_line_data)
+
+        return render_template('mc/stock_data.html', stock_data=stock_data, last_modified=formatted_last_modified, stock_info=stock_info, k_line_data=k_line_data)
+
+    except Exception as e:
+        return render_template('mc/stock_data.html', error=str(e), stock_data=None, last_modified=formatted_last_modified, stock_info={}, k_line_data=[])
+    
+
+@bp.route('/api/weighted_index', methods=['GET'])
+@login_required
+def api_weighted_index():
+    try:
+        ticker = '^TWII'
+        index = yf.Ticker(ticker)
+        hist = index.history(period="1mo")
+        weighted_index_data = hist.reset_index().to_dict(orient='records')
+        
+        # 打印調試信息
+        current_app.logger.info(f"Weighted index data: {weighted_index_data}")
+
+        return jsonify(weighted_index_data)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching weighted index data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 

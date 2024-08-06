@@ -1,0 +1,117 @@
+{% extends 'mc/base.html' %}
+
+{% block header %}
+個股資訊
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='mc/css/stock_data.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="quotes-hd d-flex align-items-center justify-content-between" id="investrue-info-1">
+    <div class="container">
+        {% if stock_data %}
+        <h2>股票代碼：{{ stock_data.code }}</h2>
+        <p>股票名稱：{{ stock_data.name }}</p>
+        <p>最後更新時間：{{ last_modified }}</p>
+
+        {% elif error %}
+        <p class="text-danger">{{ error }}</p>
+        {% else %}
+        <p>未找到資料</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 上面的框 -->
+<div class="stock-info-top">
+    <div class="lasty-detail">
+        <ul class="nav nav-detail-ohlc">
+            <li class="nav-item">
+                <i>開盤價</i>
+                <span>{{ stock_info.get('regularMarketOpen', 'N/A') }}</span>
+            </li>
+            <li class="nav-item">
+                <i>收盤價</i>
+                <span>{{ stock_info.get('regularMarketPreviousClose', 'N/A') }}</span>
+            </li>
+            <li class="nav-item">
+                <i>最高價</i>
+                <span>{{ stock_info.get('regularMarketDayHigh', 'N/A') }}</span>
+            </li>
+            <li class="nav-item">
+                <i>最低價</i>
+                <span>{{ stock_info.get('regularMarketDayLow', 'N/A') }}</span>
+            </li>
+            <li class="nav-item">
+                <i>成交股數</i>
+                <span>{{ stock_data.volume if stock_data else 'N/A' }}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- 下面的框 -->
+<div class="stock-info-bottom">
+    <div class="lasty-detail">
+        <ul class="nav nav-detail-ohlc">
+            <li class="nav-item">
+                <i>成交量(張)</i>
+                <span>{{ stock_data.TradeVolume if stock_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>成交值(元)</i>
+                <span>{{ stock_data.TradeValue if stock_data else 'N/A' }}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- 按鈕區域 -->
+<div class="button-group">
+    <button id="btn-info" class="btn btn-primary">公司基本資料</button>
+    <button id="btn-trading" class="btn btn-secondary">顯示交易資訊</button>
+    <button id="btn-kline" class="btn btn-success">顯示K線圖</button>
+</div>
+
+<!-- 复选框区域，初始隐藏 -->
+<div class="checkbox-group" id="date-range-options" style="display: none;">
+    <form id="date-range-form">
+        <label><input type="checkbox" name="date_range" value="30" checked> 30日</label>
+        <label><input type="checkbox" name="date_range" value="60"> 60日</label>
+        <label><input type="checkbox" name="date_range" value="120"> 120日</label>
+        <label><input type="checkbox" name="date_range" value="180"> 180日</label>
+        <button type="button" id="update-chart" class="btn btn-info">更新圖表</button>
+    </form>
+</div>
+
+<!-- 顯示區域 -->
+<div id="display-area">
+    <p>請點擊按鈕顯示不同資訊</p>
+</div>
+
+<!-- SVG 元素，用於顯示 K 線圖 -->
+<svg id="kline-chart" width="100%" height="400" style="display: none;"></svg>
+
+<!-- 隱藏的JSON數據 -->
+<script id="stock-data-json" type="application/json">
+    {{ stock_data | tojson | safe }}
+</script>
+<script id="stock-info-json" type="application/json">
+    {{ stock_info | tojson | safe }}
+</script>
+<script id="k-line-data-json" type="application/json">
+    {{ k_line_data | tojson | safe }}
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="{{ url_for('static', filename='mc/js/sd_company_info.js') }}"></script>
+<script src="{{ url_for('static', filename='mc/js/sd_kline_chart.js') }}"></script>
+<script src="{{ url_for('static', filename='mc/js/sd_trading_info.js') }}"></script>
+
+{% endblock %}
