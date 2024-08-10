@@ -1,83 +1,84 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const btnKline = document.getElementById('btn-kline');
-    const dateRangeOptions = document.getElementById('date-range-options');
-    const updateChartBtn = document.getElementById('update-chart');
+//sd_kline_chart.js
 
-    btnKline.addEventListener('click', function() {
-        dateRangeOptions.style.display = 'block';
-    });
-
-    updateChartBtn.addEventListener('click', function() {
-        const selectedRanges = Array.from(document.querySelectorAll('input[name="date_range"]:checked'))
-            .map(checkbox => checkbox.value);
-        fetchKLineData(selectedRanges);
-    });
-
-    function fetchKLineData(ranges) {
-        fetch(`/stock_data?k_line_ranges=${ranges.join(',')}`)
-            .then(response => response.json())
-            .then(data => {
-                displayKLineChart(data);
-            })
-            .catch(error => console.error('Error fetching K-line data:', error));
-    }
-
-    function displayKLineChart(data) {
-        const svg = d3.select('#kline-chart');
-        svg.selectAll('*').remove(); // Clear existing content
-
-        data.forEach(rangeData => {
-            const width = svg.node().getBoundingClientRect().width;
-            const height = svg.node().getBoundingClientRect().height;
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            
-            const x = d3.scaleTime().range([0, width - margin.left - margin.right]);
-            const y = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]);
-
-            const kLineData = rangeData.data;
-            x.domain(d3.extent(kLineData, d => new Date(d.date)));
-            y.domain([d3.min(kLineData, d => d.low), d3.max(kLineData, d => d.high)]);
-
-            const xAxis = d3.axisBottom(x);
-            const yAxis = d3.axisLeft(y);
-
-            svg.append('g')
-                .attr('class', 'x axis')
-                .attr('transform', `translate(${margin.left},${height - margin.bottom})`)
-                .call(xAxis);
-
-            svg.append('g')
-                .attr('class', 'y axis')
-                .attr('transform', `translate(${margin.left},${margin.top})`)
-                .call(yAxis);
-
-            svg.selectAll('.candle')
-                .data(kLineData)
-                .enter().append('rect')
-                .attr('class', 'candle')
-                .attr('x', d => x(new Date(d.date)) - 5)
-                .attr('y', d => y(Math.max(d.open, d.close)))
-                .attr('width', 10)
-                .attr('height', d => Math.abs(y(d.open) - y(d.close)))
-                .attr('fill', d => d.open > d.close ? 'red' : 'green')
-                .attr('transform', `translate(${margin.left},${margin.top})`);
-
-            svg.selectAll('.stem')
-                .data(kLineData)
-                .enter().append('line')
-                .attr('class', 'stem')
-                .attr('x1', d => x(new Date(d.date)))
-                .attr('x2', d => x(new Date(d.date)))
-                .attr('y1', d => y(d.high))
-                .attr('y2', d => y(d.low))
-                .attr('stroke', 'black')
-                .attr('transform', `translate(${margin.left},${margin.top})`);
-
-            svg.append('text')
-                .attr('x', width / 2)
-                .attr('y', margin.top)
-                .attr('text-anchor', 'middle')
-                .text(`K線圖 (${rangeData.range})`);
+document.addEventListener('DOMContentLoaded', () => {
+    // 按钮点击事件处理
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const days = this.getAttribute('data-value');
+            if (stockCode) {
+                fetchKLineData(stockCode, days);
+            } else {
+                console.error('股票代码尚未设置');
+            }
         });
-    }
+    });
+
+    // 显示时间范围选项
+    document.getElementById('btn-kline').addEventListener('click', function() {
+        document.getElementById('date-range-options').style.display = 'block';
+    });
 });
+
+function fetchKLineData(stockCode, kLineRange) {
+    const url = `/mc/k_line_data?stock_code=${encodeURIComponent(stockCode)}&k_line_ranges=${encodeURIComponent(kLineRange || 'max')}`;
+    console.log('Fetching data from:', url); // 添加此行以调试 URL
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data); // 添加此行以调试数据
+            if (data.k_line_data) {
+                generateKLineChart(data.k_line_data);
+            } else {
+                console.error('No K-Line data found in response');
+            }
+        })
+        .catch(error => console.error('Error fetching K-Line data:', error));
+}
+
+
+
+function generateKLineChart(kLineData) {
+    if (!Array.isArray(kLineData) || kLineData.length === 0) {
+        console.error('Invalid K-Line Data');
+        return;
+    }
+
+    const trace = {
+        x: kLineData.map(record => new Date(record['Date'])),
+        open: kLineData.map(record => record['Open']),
+        high: kLineData.map(record => record['High']),
+        low: kLineData.map(record => record['Low']),
+        close: kLineData.map(record => record['Close']),
+        type: 'candlestick',
+        name: 'K线图'
+    };
+
+    const layout = {
+        title: 'K线图',
+        xaxis: { title: '日期', type: 'date', tickformat: '%Y-%m-%d' },
+        yaxis: { title: '价格' }
+    };
+
+    const chartContainerId = 'kline-chart';
+    const chartContainer = document.getElementById(chartContainerId);
+
+    if (chartContainer) {
+        Plotly.purge(chartContainerId);  // 清除旧图表
+        Plotly.newPlot(chartContainerId, [trace], layout); // 重新绘制图表
+    } else {
+        console.error('Chart container not found');
+    }
+}
+
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+const stockCode = getQueryParam('stock_code') || '';
+console.log(stockCode);

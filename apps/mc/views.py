@@ -3,17 +3,21 @@
 # 漲跌停還沒寫完 #
 
 import asyncio
+from asyncio.log import logger
 from math import ceil
 import httpx
 import requests
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, jsonify, logging, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required
 from apps.fastapi.stock_data_api.stock_data_api import API_URLS
 from apps.mc.models import Members
 from apps.fastapi.news_api.news_requests import fetch_data  # 確保這是正確的導入
 from .api_requests import fetch_news_data, fetch_limit_up_data, fetch_limit_down_data
-import yfinance as yf
 from . import bp
+from datetime import datetime
+import pandas as pd
+import yfinance as yf
+
 
 @bp.route('/')
 @login_required
@@ -176,13 +180,15 @@ def search_keywords():
 
     if keyword:
         return redirect(url_for('mc.stock_data', stock_code=keyword))
+
     return redirect(url_for('mc.index'))
+
+
 
 @bp.route('/stock_data', methods=['GET'])
 @login_required
 def stock_data():
-    from datetime import datetime
-    import pandas as pd
+
 
     # 初始化最後修改時間的變數
     formatted_last_modified = None
@@ -223,22 +229,57 @@ def stock_data():
             'industry': stock_info.get('industry', 'N/A'),
             'country': stock_info.get('country', 'N/A'),
             'employees': stock_info.get('fullTimeEmployees', 'N/A'),
-            'ceo': stock_info.get('ceo', 'N/A'),  # 可能需要進一步處理以獲得創辦人資料
+            'ceo': stock_info.get('ceo', 'N/A'),
         }
 
+        # 這裡我們移除了 k_line_data 的處理
 
-        # K 線數據
-        k_line_data = stock_history.reset_index().to_dict(orient='records')
-        for record in k_line_data:
-            record['date'] = record['Date'].strftime('%Y-%m-%d')
-
-        print(k_line_data)
-
-        return render_template('mc/stock_data.html', stock_data=stock_data, last_modified=formatted_last_modified, stock_info=stock_info, k_line_data=k_line_data)
+        return render_template('mc/stock_data.html', stock_data=stock_data, last_modified=formatted_last_modified, stock_info=stock_info)
 
     except Exception as e:
-        return render_template('mc/stock_data.html', error=str(e), stock_data=None, last_modified=formatted_last_modified, stock_info={}, k_line_data=[])
-    
+        return render_template('mc/stock_data.html', error=str(e), stock_data=None, last_modified=formatted_last_modified, stock_info={})
+
+
+
+
+
+@bp.route('/k_line_data', methods=['GET'])
+@login_required
+def kline_data():
+    try:
+        stock_code = request.args.get('stock_code', '')
+        k_line_range = request.args.get('k_line_ranges')  # 获取时间范围参数
+        if not stock_code:
+            return jsonify({'error': '請輸入股票代碼'}), 400
+
+        ticker = f"{stock_code}.TW"
+        stock = yf.Ticker(ticker)
+        stock_history = stock.history(period='max', interval="1d", start=None, end=None, actions=True, auto_adjust=True, back_adjust=False)
+
+        k_line_data = stock_history.reset_index().to_dict(orient='records')
+
+        clean_k_line_data = [
+            {k: (v if v is not None and not pd.isna(v) else None) for k, v in record.items()}
+            for record in k_line_data
+        ]
+
+        logger.info(f"Generated K-Line data: {clean_k_line_data}")
+
+
+        return jsonify(k_line_data=clean_k_line_data, stock_code=stock_code)
+
+    except Exception as e:
+        logging.error(f"Error fetching K-line data: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+
+
+
+
+
+
+
 
 @bp.route('/api/weighted_index', methods=['GET'])
 @login_required

@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/stock_data.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sd_kline_chart.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -31,23 +32,23 @@
         <ul class="nav nav-detail-ohlc">
             <li class="nav-item">
                 <i>開盤價</i>
-                <span>{{ stock_info.get('regularMarketOpen', 'N/A') }}</span>
+                <span>{{ stock_info.get('regularMarketOpen', 'N/A') if stock_info else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>收盤價</i>
-                <span>{{ stock_info.get('regularMarketPreviousClose', 'N/A') }}</span>
+                <span>{{ stock_info.get('regularMarketPreviousClose', 'N/A') if stock_info else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>最高價</i>
-                <span>{{ stock_info.get('regularMarketDayHigh', 'N/A') }}</span>
+                <span>{{ stock_info.get('regularMarketDayHigh', 'N/A') if stock_info else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>最低價</i>
-                <span>{{ stock_info.get('regularMarketDayLow', 'N/A') }}</span>
+                <span>{{ stock_info.get('regularMarketDayLow', 'N/A') if stock_info else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>成交股數</i>
-                <span>{{ stock_data.volume if stock_data else 'N/A' }}</span>
+                <span>{{ stock_info.volume if stock_data else 'N/A' if stock_info else 'N/A' }}</span>
             </li>
         </ul>
     </div>
@@ -73,27 +74,42 @@
 <div class="button-group">
     <button id="btn-info" class="btn btn-primary">公司基本資料</button>
     <button id="btn-trading" class="btn btn-secondary">顯示交易資訊</button>
-    <button id="btn-kline" class="btn btn-success">顯示K線圖</button>
+    <button id="btn-kline" class="btn btn-success">技術分析</button>
 </div>
+
 
 <!-- 复选框区域，初始隐藏 -->
 <div class="checkbox-group" id="date-range-options" style="display: none;">
-    <form id="date-range-form">
-        <label><input type="checkbox" name="date_range" value="30" checked> 30日</label>
-        <label><input type="checkbox" name="date_range" value="60"> 60日</label>
-        <label><input type="checkbox" name="date_range" value="120"> 120日</label>
-        <label><input type="checkbox" name="date_range" value="180"> 180日</label>
-        <button type="button" id="update-chart" class="btn btn-info">更新圖表</button>
-    </form>
+    <div class="options-container">
+        <!-- 你可以在這裡添加其他選項或內容 -->
+        <div class="btn-group">
+            <div class="btn" data-value="1d">日線</div>
+            <div class="btn" data-value="5d">週線</div>
+            <div class="btn" data-value="1mo">月線</div>
+            <div class="btn" data-value="6mo">半年線</div>
+            <div class="btn" data-value="1y">年線</div>
+        </div>
+
+
+        <!-- <form id="date-range-form">
+            <label><input type="checkbox" name="date_range" value="30" checked> 30日</label>
+            <label><input type="checkbox" name="date_range" value="60"> 60日</label>
+            <label><input type="checkbox" name="date_range" value="120"> 120日</label>
+            <label><input type="checkbox" name="date_range" value="180"> 180日</label>
+            <button type="button" id="update-chart" class="btn btn-info">更新圖表</button>
+        </form> -->
+    </div>
+
 </div>
+
 
 <!-- 顯示區域 -->
 <div id="display-area">
     <p>請點擊按鈕顯示不同資訊</p>
 </div>
 
-<!-- SVG 元素，用於顯示 K 線圖 -->
-<svg id="kline-chart" width="100%" height="400" style="display: none;"></svg>
+<div id="kline-chart" style="width: 100%; height: 400px;"></div>
+
 
 <!-- 隱藏的JSON數據 -->
 <script id="stock-data-json" type="application/json">
@@ -102,16 +118,14 @@
 <script id="stock-info-json" type="application/json">
     {{ stock_info | tojson | safe }}
 </script>
-<script id="k-line-data-json" type="application/json">
-    {{ k_line_data | tojson | safe }}
-</script>
+
+
 
 {% endblock %}
 
 {% block scripts %}
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_company_info.js') }}"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_kline_chart.js') }}"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_trading_info.js') }}"></script>
-
 {% endblock %}

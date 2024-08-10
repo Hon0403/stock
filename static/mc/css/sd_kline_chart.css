@@ -1,0 +1,12 @@
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+.btn {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    flex: 1;
+}

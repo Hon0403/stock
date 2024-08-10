@@ -1,3 +1,4 @@
+// sd_trading_info.js
 document.addEventListener('DOMContentLoaded', () => {
     const btnTrading = document.getElementById('btn-trading');
     const displayArea = document.getElementById('display-area');
