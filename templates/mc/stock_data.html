@@ -83,13 +83,20 @@
     <div class="options-container">
         <!-- 你可以在這裡添加其他選項或內容 -->
         <div class="btn-group">
+            <div class="btn" data-value="1m">1 分鐘</div>
+            <div class="btn" data-value="2m">2 分鐘</div>
+            <div class="btn" data-value="5m">5 分鐘</div>
+            <div class="btn" data-value="15m">15 分鐘</div>
+            <div class="btn" data-value="30m">30 分鐘</div>
+            <div class="btn" data-value="60m">60 分鐘</div>
+            <div class="btn" data-value="90m">90 分鐘</div>
+            <div class="btn" data-value="1h">1 小時</div>
             <div class="btn" data-value="1d">日線</div>
             <div class="btn" data-value="5d">週線</div>
+            <div class="btn" data-value="1wk">週線</div>
             <div class="btn" data-value="1mo">月線</div>
-            <div class="btn" data-value="6mo">半年線</div>
-            <div class="btn" data-value="1y">年線</div>
+            <div class="btn" data-value="3mo">季線</div>
         </div>
-
 
         <!-- <form id="date-range-form">
             <label><input type="checkbox" name="date_range" value="30" checked> 30日</label>
@@ -104,20 +111,20 @@
 
 
 <!-- 顯示區域 -->
-<div id="display-area">
+<div id="display-area" style="width: 100%; height: 400px;" >
     <p>請點擊按鈕顯示不同資訊</p>
 </div>
-
-<div id="kline-chart" style="width: 100%; height: 400px;"></div>
 
 
 <!-- 隱藏的JSON數據 -->
 <script id="stock-data-json" type="application/json">
     {{ stock_data | tojson | safe }}
 </script>
+
 <script id="stock-info-json" type="application/json">
     {{ stock_info | tojson | safe }}
 </script>
+
 
 
 
