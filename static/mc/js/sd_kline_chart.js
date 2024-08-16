@@ -139,8 +139,10 @@ function createLineTrace(kLineData, dateField) {
 function createLayout(tickFormat) {
     return {
         title: 'K線圖',
-        xaxis: { title: '日期', type: 'date', tickformat: tickFormat },
-        yaxis: { title: '價格' }
+        xaxis: { title: '日期', type: 'date', tickformat: tickFormat, showticklabels: false },
+        yaxis: { title: '價格' },
+        dragmode: 'pan', // 允許拖曳
+        scrollZoom: true // 允許滾輪放大縮小
     };
 }
 
@@ -149,7 +151,7 @@ function renderChart(traces, layout) {
     const chartContainer = document.getElementById(chartContainerId);
 
     if (chartContainer) {
-        Plotly.react(chartContainerId, traces, layout);
+        Plotly.react(chartContainerId, traces, layout, { scrollZoom: true });
     } else {
         console.error('未找到圖表容器');
     }
