@@ -4,14 +4,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const stockCode = getQueryParam('stock_code') || '';
     console.log(stockCode);
 
-    document.querySelectorAll('.btn-group .btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+    document.querySelectorAll('.button-group .btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (this.id === 'btn-kline') {
+                clearOtherButtons();
+                clearChart();
+                showDateRangeOptions();
+            } else {
+                document.getElementById('date-range-options').style.display = 'none';
+            }
+        });
+    });
+
+    document.querySelectorAll('#date-range-options .btn').forEach(btn => {
+        btn.addEventListener('click', function () {
             const days = this.getAttribute('data-value');
             console.log('Selected data-value:', days);
 
-            if (this.id === 'btn-kline') {
-                showDateRangeOptions();
-            }
             if (stockCode) {
                 fetchKLineData(stockCode, days);
             } else {
@@ -19,12 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    document.getElementById('btn-kline').addEventListener('click', showDateRangeOptions);
 });
 
 function showDateRangeOptions() {
     document.getElementById('date-range-options').style.display = 'block';
+}
+
+function clearOtherButtons() {
+    document.querySelectorAll('.button-group .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
 }
 
 function fetchKLineData(stockCode, kLineRange) {
@@ -57,32 +70,6 @@ function clearChart() {
     } else {
         console.error('未找到顯示區域');
     }
-
-    const chartContainerId = 'kline-chart';
-    if (document.getElementById(chartContainerId)) {
-        Plotly.purge(chartContainerId);
-    } else {
-        console.error('未找到圖表容器');
-    }
-}
-
-// 處理分鐘
-function generateMinuteKLineChart(kLineData) {
-    const candlestickTrace = createTrace(kLineData, 'Datetime');
-    const lineTrace = createLineTrace(kLineData, 'Datetime');
-
-    const layout = createLayout('%Y-%m-%d %H:%M');
-    renderChart([candlestickTrace, lineTrace], layout);
-}
-
-// 處理日線
-function generateDayKLineChart(kLineData, days) {
-    const dateField = (days === '1h') ? 'Datetime' : 'Date';
-    const candlestickTrace = createTrace(kLineData, dateField);
-    const lineTrace = createLineTrace(kLineData, dateField);
-
-    const layout = createLayout((days === '1h') ? '%Y-%m-%d %H:%M' : '%Y-%m-%d');
-    renderChart([candlestickTrace, lineTrace], layout);
 }
 
 function generateKLineChart(kLineData, days) {
@@ -91,71 +78,103 @@ function generateKLineChart(kLineData, days) {
         return;
     }
 
-    if (['1m', '2m', '5m', '15m', '30m', '60m', '90m'].includes(days)) {
-        generateMinuteKLineChart(kLineData);
-    } else if (['1h', '1d', '5d', '1wk', '1mo', '3mo'].includes(days)) {
-        generateDayKLineChart(kLineData, days);
-    } else {
-        console.error('無效的時間間隔');
-    }
+    const ohlc = kLineData.map(record => [
+        new Date(record.Date || record.Datetime).getTime(),
+        record.Open,
+        record.High,
+        record.Low,
+        record.Close
+    ]);
+
+    Highcharts.stockChart('kline-chart', {
+        accessibility: {
+            enabled: false
+        },
+        rangeSelector: {
+            selected: 1,
+            inputDateFormat: '%Y年%m月%d日', // 自定義日期格式
+            inputEditDateFormat: '%Y年%m月%d日', // 自定義編輯日期格式
+            inputBoxWidth: 120,
+            inputBoxHeight: 18,
+            inputStyle: {
+                color: '#039',
+                fontWeight: 'bold'
+            },
+            labelStyle: {
+                color: 'silver',
+                fontWeight: 'bold'
+            }
+        },
+        title: {
+            text: 'K線圖'
+        },
+        series: [{
+            type: 'candlestick',
+            name: 'K線圖',
+            data: ohlc,
+            tooltip: {
+                valueDecimals: 0, // 設置小數位數為0
+                formatter: function () {
+                    const point = this.points[0].point;
+                    const change = Math.floor((point.close - point.open) / point.open * 100);
+                    const changeSign = change > 0 ? '+' : '';
+                    return `<span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Math.floor(point.close)}</b><br/>
+                            開盤價: <b>${Math.floor(point.open)}</b><br/>
+                            最高價: <b>${Math.floor(point.high)}</b><br/>
+                            最低價: <b>${Math.floor(point.low)}</b><br/>
+                            收盤價: <b>${Math.floor(point.close)}</b><br/>
+                            漲跌: <b>${changeSign}${change}%</b><br/>`;
+                }
+            },
+            color: 'green', // 跌的顏色
+            upColor: 'red'  // 漲的顏色
+        }],
+        xAxis: {
+            type: 'datetime',
+            labels: {
+                enabled: false // 禁用 x 軸上的日期標籤
+            },
+            crosshair: {
+                color: 'gray',
+                dashStyle: 'solid',
+                label: {
+                    enabled: false // 禁用 crosshair label
+                }
+            }
+        },
+        tooltip: {
+            shared: true, // 確保 tooltip 是共享的
+            xDateFormat: null, // 隱藏日期
+            formatter: function () {
+                const points = this.points;
+                let tooltipHtml = '';
+                points.forEach(point => {
+                    const change = Math.floor((point.point.close - point.point.open) / point.point.open * 100);
+                    const changeSign = change > 0 ? '+' : '';
+                    const date = Highcharts.dateFormat('%Y-%m-%d', point.point.x);
+                    tooltipHtml += `<span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Math.floor(point.point.close)}</b><br/>
+                                    開盤價: <b>${Math.floor(point.point.open)}</b><br/>
+                                    最高價: <b>${Math.floor(point.point.high)}</b><br/>
+                                    最低價: <b>${Math.floor(point.point.low)}</b><br/>
+                                    收盤價: <b>${Math.floor(point.point.close)}</b><br/>
+                                    漲跌: <b>${changeSign}${change}%</b><br/>
+                                    日期: <b>${date}</b><br/>`;
+;
+                });
+                return tooltipHtml;
+            }
+        }
+    });
 }
 
-function createTrace(kLineData, dateField) {
-    return {
-        x: kLineData.map(record => new Date(record[dateField])),
-        open: kLineData.map(record => record['Open']),
-        high: kLineData.map(record => record['High']),
-        low: kLineData.map(record => record['Low']),
-        close: kLineData.map(record => record['Close']),
-        type: 'candlestick',
-        name: 'K線圖',
-        hovertemplate: `
-        <b>日期</b>: %{x}<br>
-        <b>開盤價</b>: %{open}<br>
-        <b>最高價</b>: %{high}<br>
-        <b>最低價</b>: %{low}<br>
-        <b>收盤價</b>: %{close}<br>
-        <extra></extra>
-        `
-    };
-}
 
-function createLineTrace(kLineData, dateField) {
-    return {
-        x: kLineData.map(record => new Date(record[dateField])),
-        y: kLineData.map(record => record['Close']),
-        type: 'scatter',
-        mode: 'lines',
-        name: '收盤價折線圖',
-        line: { color: 'blue' },
-        hovertemplate: `
-        <b>日期</b>: %{x}<br>
-        <b>收盤價</b>: %{y}<br>
-        <extra></extra>
-        `
-    };
-}
 
-function createLayout(tickFormat) {
-    return {
-        title: 'K線圖',
-        xaxis: { title: '日期', type: 'date', tickformat: tickFormat, showticklabels: false },
-        yaxis: { title: '價格' },
-        dragmode: 'pan', // 允許拖曳
-        scrollZoom: true // 允許滾輪放大縮小
-    };
-}
 
-function renderChart(traces, layout) {
-    const chartContainerId = 'kline-chart';
-    const chartContainer = document.getElementById(chartContainerId);
 
-    if (chartContainer) {
-        Plotly.react(chartContainerId, traces, layout, { scrollZoom: true });
-    } else {
-        console.error('未找到圖表容器');
-    }
-}
+
+
+
+
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);

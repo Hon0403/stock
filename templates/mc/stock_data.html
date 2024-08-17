@@ -92,7 +92,7 @@
             <div class="btn" data-value="90m">90 分鐘</div>
             <div class="btn" data-value="1h">1 小時</div>
             <div class="btn" data-value="1d">日線</div>
-            <div class="btn" data-value="5d">週線</div>
+            <div class="btn" data-value="5d">五日線</div>
             <div class="btn" data-value="1wk">週線</div>
             <div class="btn" data-value="1mo">月線</div>
             <div class="btn" data-value="3mo">季線</div>
@@ -131,7 +131,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <script src="{{ url_for('static', filename='mc/js/sd_company_info.js') }}"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_kline_chart.js') }}"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_trading_info.js') }}"></script>
