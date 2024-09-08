@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}股票系統{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='mc/css/index_tabs.css') }}">
-
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
+            <!-- 側邊欄部分 -->
             <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
                 <div class="position-sticky">
                     <h5 class="mb-2 text-white">股票系統</h5>
@@ -30,13 +28,16 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link ">
+                            <a class="nav-link text-white">
                                 <i class="el-icon-menu"></i> 功能
                             </a>
                         </li>
+                        <!-- 其他導航項 -->
                     </ul>
                 </div>
             </nav>
+            
+            <!-- 主內容部分 -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">{% block header %}首頁{% endblock %}</h1>
@@ -48,9 +49,11 @@
             </main>
         </div>
     </div>
+    
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='mc/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='mc/js/sidebar.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>

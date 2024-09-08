@@ -10,14 +10,45 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="quotes-hd d-flex align-items-center justify-content-between" id="investrue-info-1">
     <div class="container">
         {% if stock_data %}
-        <h2>股票代碼：{{ stock_data.code }}</h2>
-        <p>股票名稱：{{ stock_data.name }}</p>
-        <p>最後更新時間：{{ last_modified }}</p>
-
+            <!-- 動態顯示上漲下跌狀態 -->
+            <div class="lasty-trade {% if stock_data.change|float > 0 %}up{% else %}down{% endif %}">
+                <div class="deal" title="{{ stock_data.name }}({{ stock_data.code }}) 最新股價">{{ stock_data.Close }}</div>
+                <span class="chg ud-arrow {% if stock_data.change|float > 0 %}up{% elif stock_data.change|float < 0 %}down{% endif %}">
+                    {% if stock_data.change|float > 0 %}▲{% elif stock_data.change|float < 0 %}▼{% endif %}
+                    {{ stock_data.change }}
+                </span>
+                {% if stock_data.changePercent != 'N/A' %}
+                <span class="chg-rate ml-4 {% if stock_data.change|float > 0 %}up{% elif stock_data.change|float < 0 %}down{% endif %}">{{ stock_data.changePercent }}%</span>
+                {% endif %}
+            </div>
+        {% elif market_data %}
+            <!-- 根據市場類型顯示資料 -->
+            {% if market_type == 'otc' %}
+                <div class="lasty-trade {% if market_data.change|float > 0 %}up{% else %}down{% endif %}">
+                    <div class="deal" title="{{ market_data.name }}({{ market_data.code }}) 最新股價">{{ market_data.Close }}</div>
+                    <span class="chg ud-arrow {% if market_data.change|float > 0 %}up{% elif market_data.change|float < 0 %}down{% endif %}">
+                        {% if market_data.change|float > 0 %}▲{% elif market_data.change|float < 0 %}▼{% endif %}
+                        {{ market_data.change }}
+                    </span>
+                    {% if market_data.changePercent != 'N/A' %}
+                    <span class="chg-rate ml-4 {% if market_data.change|float > 0 %}up{% elif market_data.change|float < 0 %}down{% endif %}">{{ market_data.changePercent }}%</span>
+                    {% endif %}
+                </div>
+            {% elif market_type == 'esm' %}
+                <div class="lasty-trade {% if market_data.change|float > 0 %}up{% else %}down{% endif %}">
+                    <div class="deal" title="{{ market_data.name }}({{ market_data.code }}) 最新股價">{{ market_data.Close }}</div>
+                    <span class="chg ud-arrow {% if market_data.change|float > 0 %}up{% elif market_data.change|float < 0 %}down{% endif %}">
+                        {% if market_data.change|float > 0 %}▲{% elif market_data.change|float < 0 %}▼{% endif %}
+                        {{ market_data.change }}
+                    </span>
+                    {% if market_data.changePercent != 'N/A' %}
+                    <span class="chg-rate ml-4 {% if market_data.change|float > 0 %}up{% elif market_data.change|float < 0 %}down{% endif %}">{{ market_data.changePercent }}%</span>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% elif error %}
         <p class="text-danger">{{ error }}</p>
         {% else %}
@@ -26,30 +57,76 @@
     </div>
 </div>
 
+
+
 <!-- 上面的框 -->
 <div class="stock-info-top">
     <div class="lasty-detail">
         <ul class="nav nav-detail-ohlc">
+            {% if stock_data %}
             <li class="nav-item">
                 <i>開盤價</i>
-                <span>{{ stock_info.get('regularMarketOpen', 'N/A') if stock_info else 'N/A' }}</span>
+                <span>{{ stock_data.open | float if stock_data else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>收盤價</i>
-                <span>{{ stock_info.get('regularMarketPreviousClose', 'N/A') if stock_info else 'N/A' }}</span>
+                <span>{{ stock_data.close | float if stock_data else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>最高價</i>
-                <span>{{ stock_info.get('regularMarketDayHigh', 'N/A') if stock_info else 'N/A' }}</span>
+                <span>{{ stock_data.high | float if stock_data else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>最低價</i>
-                <span>{{ stock_info.get('regularMarketDayLow', 'N/A') if stock_info else 'N/A' }}</span>
+                <span>{{ stock_data.low | float if stock_data else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>成交股數</i>
-                <span>{{ stock_info.volume if stock_data else 'N/A' if stock_info else 'N/A' }}</span>
+                <span>{{ stock_data.volume | float if stock_data else 'N/A' }}</span>
             </li>
+            {% elif market_data %}
+            <li class="nav-item">
+                <i>開盤價</i>
+                <span>{{ market_data.Open | float if market_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>收盤價</i>
+                <span>{{ market_data.Close | float if market_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>最高價</i>
+                <span>{{ market_data.High | float if market_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>最低價</i>
+                <span>{{ market_data.Low | float if market_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>成交股數</i>
+                <span>{{ market_data.TradingShares | float if market_data else 'N/A' }}</span>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <i>開盤價</i>
+                <span>N/A</span>
+            </li>
+            <li class="nav-item">
+                <i>收盤價</i>
+                <span>N/A</span>
+            </li>
+            <li class="nav-item">
+                <i>最高價</i>
+                <span>N/A</span>
+            </li>
+            <li class="nav-item">
+                <i>最低價</i>
+                <span>N/A</span>
+            </li>
+            <li class="nav-item">
+                <i>成交股數</i>
+                <span>N/A</span>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </div>
@@ -58,31 +135,48 @@
 <div class="stock-info-bottom">
     <div class="lasty-detail">
         <ul class="nav nav-detail-ohlc">
+            {% if stock_data %}
             <li class="nav-item">
                 <i>成交量(張)</i>
-                <span>{{ stock_data.TradeVolume if stock_data else 'N/A' }}</span>
+                <span>{{ stock_data.trading_volume_in_lots | float if stock_data else 'N/A' }}</span>
             </li>
             <li class="nav-item">
                 <i>成交值(元)</i>
-                <span>{{ stock_data.TradeValue if stock_data else 'N/A' }}</span>
+                <span>{{ stock_data.transaction_amount | float if stock_data else 'N/A' }}</span>
             </li>
+            {% elif market_data %}
+            <li class="nav-item">
+                <i>成交量(張)</i>
+                <span>{{ market_data.TradingShares | float if market_data else 'N/A' }}</span>
+            </li>
+            <li class="nav-item">
+                <i>成交值(元)</i>
+                <span>{{ market_data.TransactionAmount | float if market_data else 'N/A' }}</span>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <i>成交量(張)</i>
+                <span>N/A</span>
+            </li>
+            <li class="nav-item">
+                <i>成交值(元)</i>
+                <span>N/A</span>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </div>
 
-<!-- 按鈕區域 -->
-<div class="button-group">
-    <button id="btn-info" class="btn btn-primary">公司基本資料</button>
-    <button id="btn-trading" class="btn btn-secondary">顯示交易資訊</button>
-    <button id="btn-kline" class="btn btn-success">技術分析</button>
+
+<div class="main-button-group">
+    <button id="btn-info" class="main-btn btn-primary"><i class="fas fa-info-circle"></i> 公司基本資料</button>
+    <button id="btn-trading" class="main-btn btn-secondary"><i class="fas fa-chart-line"></i> 顯示交易資訊</button>
+    <button id="btn-kline" class="main-btn btn-success"><i class="fas fa-chart-bar"></i> 技術分析</button>
 </div>
 
-
-<!-- 复选框区域，初始隐藏 -->
-<div class="checkbox-group" id="date-range-options" style="display: none;">
+<div class="date-range-group" id="date-range-options" style="display: none;">
     <div class="options-container">
-        <!-- 你可以在這裡添加其他選項或內容 -->
-        <div class="btn-group">
+        <div class="date-range-btn-group">
             <div class="btn" data-value="1m">1 分鐘</div>
             <div class="btn" data-value="2m">2 分鐘</div>
             <div class="btn" data-value="5m">5 分鐘</div>
@@ -97,34 +191,12 @@
             <div class="btn" data-value="1mo">月線</div>
             <div class="btn" data-value="3mo">季線</div>
         </div>
-
-        <!-- <form id="date-range-form">
-            <label><input type="checkbox" name="date_range" value="30" checked> 30日</label>
-            <label><input type="checkbox" name="date_range" value="60"> 60日</label>
-            <label><input type="checkbox" name="date_range" value="120"> 120日</label>
-            <label><input type="checkbox" name="date_range" value="180"> 180日</label>
-            <button type="button" id="update-chart" class="btn btn-info">更新圖表</button>
-        </form> -->
     </div>
-
 </div>
 
-
-<!-- 顯示區域 -->
-<div id="display-area" style="width: 100%; height: 400px;" >
+<div id="display-area" style="width: 100%; height: 400px;">
     <p>請點擊按鈕顯示不同資訊</p>
 </div>
-
-
-<!-- 隱藏的JSON數據 -->
-<script id="stock-data-json" type="application/json">
-    {{ stock_data | tojson | safe }}
-</script>
-
-<script id="stock-info-json" type="application/json">
-    {{ stock_info | tojson | safe }}
-</script>
-
 
 
 
@@ -134,8 +206,66 @@
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<script src="{{ url_for('static', filename='mc/js/sd_company_info.js') }}"></script>
-<script src="{{ url_for('static', filename='mc/js/sd_kline_chart.js') }}"></script>
 <script src="{{ url_for('static', filename='mc/js/sd_trading_info.js') }}"></script>
+
+<script type="module">
+    document.addEventListener('DOMContentLoaded', function () {
+        const stockCode = '{{ stock_code }}';  // 從模板中插入
+        const marketCode = '{{ market_code }}';  // 從模板中插入
+
+        console.log('Stock Code:', stockCode);  // 在控制台中查看 stockCode 的值
+        console.log('Market Code:', marketCode);  // 在控制台中查看 marketCode 的值
+
+        if (stockCode) {
+            // 插入 listed-info-json 腳本
+            const listedInfoJson = `{{ listed_info | tojson | safe }}`;
+            const listedInfoScript = document.createElement('script');
+            listedInfoScript.id = 'listed-info-json';
+            listedInfoScript.type = 'application/json';
+            listedInfoScript.textContent = listedInfoJson;
+            document.body.appendChild(listedInfoScript);
+
+            import('/static/mc/js/sd_company_info.js')
+                .then(module => {
+                    const { initCompanyInfo } = module;
+                    initCompanyInfo(); // 假設 sd_company_info.js 中有 initCompanyInfo 函數來初始化公司資訊
+                })
+                .catch(error => console.error('Error loading sd_company_info.js:', error));
+
+            import('/static/mc/js/sd_kline_chart.js')
+                .then(module => {
+                    const { initKLineChart } = module;
+                    initKLineChart(stockCode);
+                })
+                .catch(error => console.error('Error loading sd_kline_chart.js:', error));
+        }
+        
+        if (marketCode) {
+            // 插入 basic-info-json 腳本
+            const basicInfoJson = `{{ basic_info | tojson | safe }}`;
+            const basicInfoScript = document.createElement('script');
+            basicInfoScript.id = 'basic-info-json';
+            basicInfoScript.type = 'application/json';
+            basicInfoScript.textContent = basicInfoJson;
+            document.body.appendChild(basicInfoScript);
+
+            import('/static/mc/js/otcEsmData.js')
+                .then(module => {
+                    const { initotcEsmData } = module;
+                    initotcEsmData(); // 假設 otcEsmData.js 中有 initotcEsmData 函數來初始化公司資訊
+                })
+                .catch(error => console.error('Error loading otcEsmData.js:', error));
+
+            import('/static/mc/js/otc_Kline_Chart.js')
+                .then(module => {
+                    const { initOTCKLineChart } = module;
+                    initOTCKLineChart(marketCode);
+                })
+                .catch(error => console.error('Error loading otc_Kline_Chart.js:', error));
+        }
+    });
+</script>
+
+
+
 {% endblock %}

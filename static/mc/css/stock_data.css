@@ -1,61 +1,125 @@
-/* 上下框样式 */
+/* 上下框樣式 */
 .stock-info-top, .stock-info-bottom {
-    border: 1px solid #dee2e6; /* 框的边框 */
+    border: 1px solid #dee2e6; /* 框的邊框 */
     background-color: #f8f9fa; /* 背景色 */
-    padding: 0.5rem; /* 内边距 */
-    border-radius: 0.25rem; /* 圆角边框 */
+    padding: 0.5rem; /* 內邊距 */
+    border-radius: 0.25rem; /* 圓角邊框 */
 }
 
-/* 上下框之间没有间隔 */
+/* 上下框之間沒有間隔 */
 .stock-info-top {
-    margin-bottom: 0; /* 上框底部没有间隔 */
+    margin-bottom: 0; /* 上框底部沒有間隔 */
 }
 
 .stock-info-bottom {
-    margin-top: 0; /* 下框顶部没有间隔 */
+    margin-top: 0; /* 下框頂部沒有間隔 */
 }
 
-/* 上框的平行数据样式 */
-.stock-info-top .nav-detail-ohlc {
-    display: flex;
-    justify-content: space-between; /* 项目之间的间距 */
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-/* 下框的平行数据样式 */
+/* 上框和下框的平行數據樣式 */
+.stock-info-top .nav-detail-ohlc,
 .stock-info-bottom .nav-detail-ohlc {
     display: flex;
-    justify-content: space-between; /* 项目之间的间距 */
+    justify-content: space-between; /* 項目之間的間距 */
     padding: 0;
     margin: 0;
-    list-style: none;
+    list-style: none; /* 去掉列表樣式 */
 }
 
-/* 单个项目的样式 */
-.nav-item {
-    display: flex;
-    align-items: center;
-    margin: 0; /* 去掉外边距 */
-    flex: 1; /* 平均分配每个项目的宽度 */
-    box-sizing: border-box; /* 包括内边距和边框 */
-    height: auto; /* 自适应高度 */
-    font-family: -apple-system, BlinkMacSystemFont, Arial, Helvetica, "PingFang SC", "PingFang TC", "Microsoft JhengHei", sans-serif; /* 设置字体系列 */
-    font-size: 14px; /* 设置字体大小 */
-    font-weight: 400; /* 设置字体粗细 */
-    line-height: 21px; /* 设置行高 */
-    color: rgb(33, 37, 41); /* 设置字体颜色 */
-    text-align: left; /* 左对齐 */
-}
 
-/* 项目标签的样式 */
+/* 項目標籤的樣式 */
 .nav-item i {
     font-weight: bold;
-    margin-right: 5px; /* 更小的间距 */
+    margin-right: 8px; /* 增加間距 */
 }
 
-/* 项目值的样式 */
+/* 項目值的樣式 */
 .nav-item span {
-    font-size: 0.75rem; /* 更小的字体大小 */
+    font-size: 0.875rem; /* 調整字體大小 */
+}
+
+/* 主按鈕組樣式 */
+.main-button-group {
+    display: flex;
+    justify-content: space-between; /* 確保按鈕之間有間距 */
+    margin: 20px 0;
+    width: 100%; /* 確保容器佔滿寬度 */
+}
+
+.main-button-group .main-btn {
+    flex: 1; /* 平均分配每個按鈕的寬度 */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+    margin: 0 5px; /* 增加按鈕之間的間距 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.main-button-group .main-btn.btn-primary {
+    background-color: #007bff; /* 藍色 */
+}
+
+.main-button-group .main-btn.btn-secondary {
+    background-color: #6c757d; /* 灰色 */
+}
+
+.main-button-group .main-btn.btn-success {
+    background-color: #28a745; /* 綠色 */
+}
+
+.main-button-group .main-btn:hover {
+    transform: scale(1.05); /* 滑鼠懸停時放大 */
+}
+
+.main-button-group .main-btn i {
+    margin-right: 8px; /* 圖標與文字之間的間距 */
+}
+
+
+
+/* 上漲和下跌顏色 */
+.up {
+    color: #e33; /* 紅色 */
+}
+
+.down {
+    color: #28a745; /* 綠色 */
+}
+
+/* 最新交易樣式 */
+.quotes-info .lasty-trade {
+    position: relative;
+    z-index: 2;
+    padding: .875rem .75rem;
+    min-width: 180px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, .3), 2px 0 0 rgba(255, 255, 255, .9);
+    background: linear-gradient(90deg, #fcfcfd, #f9fafb);
+    border: 1px solid #dee2e6; /* 增加邊框 */
+    border-radius: 0.25rem; /* 增加圓角 */
+}
+
+.lasty-trade {
+    color: #495057;
+    line-height: 1.25rem;
+}
+
+.up, .up-limit {
+    color: #e33 !important;
+}
+
+.down, .down-limit {
+    color: #28a745 !important;
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+
+.ml-4 {
+    margin-left: 1.5rem; /* 增加左邊距離 */
 }
