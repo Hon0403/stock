@@ -9,7 +9,7 @@
 *系統登入介面，提供安全的用戶認證。*
 
 ### 首頁
-![首頁](image/dashboard_screenshot.png)
+![首頁](image/index.png)
 *登入後的主畫面，整合顯示市場概況、新聞公告及個股查詢入口。*
 
 *(您可以根據實際情況添加更多截圖，例如個股資訊頁面、K線圖頁面等)*
@@ -82,8 +82,8 @@
 
 1.  **克隆儲存庫:**
     ```
-    git clone [您的儲存庫 URL]
-    cd [專案目錄]
+    git clone [https://github.com/Hon0403/stock.git]
+    cd [stock]
     ```
 2.  **建立並啟動虛擬環境:**
     ```
