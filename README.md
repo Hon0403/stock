@@ -1,4 +1,4 @@
-# 股票資訊系統 (Stock Information System)
+# 股票資訊系統 (Stock Information System) 待更新
 
 這是一個使用 Python Flask 框架開發的網頁應用程式，旨在提供使用者查詢台灣股市相關資訊、市場新聞公告以及個股分析工具。此專案整合了多個公開資料來源，提供一個集中化的資訊平台。
 
