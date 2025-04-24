@@ -12,6 +12,11 @@
 ![首頁](image/index.png)
 *登入後的主畫面，整合顯示市場概況、新聞公告及個股查詢入口。*
 
+### 個股概況
+![個股概況](image/Stock Overview.png)
+
+### 技術分析
+![技術分析](image/Technical Analysis.png)
 *(您可以根據實際情況添加更多截圖，例如個股資訊頁面、K線圖頁面等)*
 
 ## 主要功能 (Key Features)
