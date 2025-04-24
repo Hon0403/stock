@@ -5,11 +5,11 @@
 ## 系統畫面展示
 
 ### 登入畫面
-![登入畫面](./images/login_screenshot.png)
+![登入畫面](images/login_screenshot.png)
 *系統登入介面，提供安全的用戶認證。*
 
 ### 首頁儀表板 (範例)
-![首頁儀表板](./images/dashboard_screenshot.png)
+![首頁儀表板](images/dashboard_screenshot.png)
 *登入後的主畫面，整合顯示市場概況、新聞公告及個股查詢入口。*
 
 *(您可以根據實際情況添加更多截圖，例如個股資訊頁面、K線圖頁面等)*
