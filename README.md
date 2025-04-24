@@ -17,7 +17,6 @@
 
 ### 技術分析
 ![技術分析](image/TechnicalAnalysis.png)
-*(您可以根據實際情況添加更多截圖，例如個股資訊頁面、K線圖頁面等)*
 
 ## 主要功能 (Key Features)
 
