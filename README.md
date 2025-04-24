@@ -8,8 +8,8 @@
 ![登入畫面](image/login_screenshot.png)
 *系統登入介面，提供安全的用戶認證。*
 
-### 首頁儀表板 (範例)
-![首頁儀表板](image/dashboard_screenshot.png)
+### 首頁
+![首頁](image/dashboard_screenshot.png)
 *登入後的主畫面，整合顯示市場概況、新聞公告及個股查詢入口。*
 
 *(您可以根據實際情況添加更多截圖，例如個股資訊頁面、K線圖頁面等)*
@@ -62,7 +62,7 @@
 *   **開發工具與環境 (Development Tools & Environment):**
     *   **Git:** 版本控制系統，用於追蹤程式碼變更與協作。
     *   **Virtual Environment (`venv`):** Python 的標準工具，用於建立獨立的專案環境，隔離套件依賴。
-    *   **(可補充):** Visual Studio Code (或其他您使用的 IDE/編輯器)。
+    *   **IDE:** Visual Studio Code。
 
 ## 系統架構 (System Architecture)
 
