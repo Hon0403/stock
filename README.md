@@ -5,22 +5,20 @@
 ## 系統畫面展示
 
 ### 登入畫面
-![登入畫面](./images/login_screenshot.png)
+![登入畫面](image/login_screenshot.png)
 *系統登入介面，提供安全的用戶認證。*
 
-### 首頁儀表板 (範例)
-![首頁儀表板](./images/dashboard_screenshot.png)
+### 首頁
+![首頁](image/index.png)
 *登入後的主畫面，整合顯示市場概況、新聞公告及個股查詢入口。*
 
-### 個股概況 (範例)
-![個股概況](./images/stock_info_screenshot.png)
+### 個股概況
+![個股概況](image/StockOverview.png)
 *個股詳細資訊頁面，包含基本資料、即時報價等。*
 
-### 技術分析 (範例)
-![技術分析](./images/kline_chart_screenshot.png)
+### 技術分析
+![技術分析](image/TechnicalAnalysis.png)
 *互動式 K 線圖，支援不同時間週期切換。*
-
-*(請確保圖片路徑正確，並可依需求增加或修改截圖)*
 
 ## <u>主要功能 （Key Features）</u>
 
@@ -87,7 +85,6 @@
 *   <u>櫃檯買賣中心 （TPEx） 網站： 透過網頁爬蟲獲取上櫃/興櫃的股票代碼等資訊，作為 API 資料的補充。</u>
 
 ## 如何運行 （How to Run）
-*(這部分通常不用在 Demo 時念，除非面試官特別問)*
 
 1.  克隆儲存庫：
     ```
@@ -104,14 +101,13 @@
     ```
 3.  安裝所需的 Python 套件：
     ```
-    pip install -r requirements.txt  # 確保您有 requirements.txt 檔案
+    pip install -r requirements.txt
     ```
 4.  （若使用 Selenium） 安裝 ChromeDriver： 確保您的系統已安裝與 Chrome 瀏覽器版本匹配的 ChromeDriver，或使用 `webdriver-manager` 自動管理。
 5.  設定環境變數： 參考 `config.py`，設定必要的環境變數，例如：
     *   `DATABASE_URL` （SQL Server 連線字串）
     *   `SECRET_KEY` （Flask 的安全密鑰）
     *   `FUGLE_KEY` （如果 Fugle API 被積極使用）
-    *   ... 其他可能的 API 金鑰或配置
 6.  （可選） 初始化資料庫： 如果您的模型有變更，可能需要運行資料庫遷移指令 （如果您使用了 Flask-Migrate） 或手動創建表格。
 7.  （可選） 運行爬蟲腳本： 首次運行或需要更新股票代碼列表時，可能需要執行相關的爬蟲腳本 （如 `fetch_tpex_stocks.py`）。
 8.  運行 Flask 應用程式：
@@ -123,7 +119,6 @@
 9.  在瀏覽器中開啟 `http://127.0.0.1:5000` （或其他指定的地址與端口）。
 
 ## 測試帳號 （Test Account）
-*(Demo 時可以直接口頭說出帳密，或在這裡提示)*
 
 為方便評估系統功能，可使用以下測試帳號登入：
 
