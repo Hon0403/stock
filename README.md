@@ -28,7 +28,7 @@
 ## 技術棧 (Technology Stack)
 
 *   **後端 (Backend):**
-    *   Python 3.x
+    *   Python 3.11
     *   Flask (Web 框架)
     *   SQLAlchemy (ORM, 資料庫互動)
     *   Flask-Login (使用者認證)
